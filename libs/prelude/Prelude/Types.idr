@@ -285,6 +285,7 @@ Uninhabited a => Uninhabited b => Uninhabited (Either a b) where
 ||| @ f the action to take on Left
 ||| @ g the action to take on Right
 ||| @ e the sum to analyze
+%inline
 public export
 either : (f : Lazy (a -> c)) -> (g : Lazy (b -> c)) -> (e : Either a b) -> c
 either l r (Left x) = l x

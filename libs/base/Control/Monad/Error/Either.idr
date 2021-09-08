@@ -121,9 +121,14 @@ Applicative m => Applicative (EitherT e m) where
   pure = MkEitherT . pure . Right
   f <*> x = MkEitherT [| runEitherT f <*> runEitherT x |]
 
+%inline
+bindEither : Monad m => EitherT e m a -> (a -> EitherT e m b) -> EitherT e m b
+bindEither x k = MkEitherT $ runEitherT x >>= either (pure . Left) (runEitherT . k)
+
+%inline
 public export
 Monad m => Monad (EitherT e m) where
-  x >>= k = MkEitherT $ runEitherT x >>= either (pure . Left) (runEitherT . k)
+  (>>=) = bindEither
 
 ||| Alternative instance that collects left results, allowing you to try
 ||| multiple possibilities and combine failures.
